@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f8fc">
+  <meta name="description" content="Skyblue — Discordに、もっと自由な経済体験を。">
+  <title>Skyblue — Economy, Reimagined.</title>
+  <style>
+    :root {
+      --ink: #101827;
+      --muted: #66758a;
+      --blue: #2878ed;
+      --blue2: #55b8ff;
+      --line: rgba(25, 53, 88, .10);
+      --glass: rgba(255,255,255,.72);
+      --shadow: 0 24px 70px rgba(31, 76, 135, .12);
+      --radius: 26px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", "Noto Sans JP", sans-serif;
+      background:
+        radial-gradient(ellipse at 80% 0%, rgba(119,190,255,.22), transparent 34rem),
+        radial-gradient(ellipse at 0% 35%, rgba(182,218,255,.22), transparent 30rem),
+        #f7f9fc;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .nav-wrap { position: fixed; inset: 0 0 auto; z-index: 20; padding: 14px 22px; }
+    nav {
+      max-width: 1160px; margin: auto; padding: 10px 16px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+      border: 1px solid rgba(255,255,255,.8); border-radius: 18px;
+      background: rgba(250,252,255,.76); backdrop-filter: blur(22px);
+      box-shadow: 0 8px 32px rgba(30,60,100,.06);
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 750; letter-spacing: -.04em; font-size: 20px; }
+    .brand-mark {
+      width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center;
+      color: white; font-weight: 800; font-size: 18px;
+      background: linear-gradient(145deg, #6ac8ff, #2878ed 72%);
+      box-shadow: 0 6px 16px rgba(40,120,237,.25);
+    }
+    .nav-links { display: flex; align-items: center; gap: 27px; color: #526176; font-size: 13px; font-weight: 600; }
+    .nav-links a:hover { color: var(--blue); }
+    .nav-cta, .button {
+      border: 0; border-radius: 999px; padding: 11px 19px; cursor: pointer;
+      color: white; font-weight: 700; font-size: 13px;
+      background: linear-gradient(110deg, #398ef5, #2369db);
+      box-shadow: 0 8px 20px rgba(40,120,237,.20);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .nav-cta:hover, .button:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(40,120,237,.28); }
+    .menu-btn { display: none; border: 0; background: transparent; font-size: 23px; cursor: pointer; color: var(--ink); }
+    .hero { min-height: 790px; padding: 175px 24px 90px; text-align: center; position: relative; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px; padding: 7px 13px;
+      border: 1px solid rgba(40,120,237,.14); border-radius: 999px;
+      color: #3476c8; background: rgba(255,255,255,.66); font-size: 11px; font-weight: 800; letter-spacing: .13em;
+    }
+    .pulse { width: 7px; height: 7px; border-radius: 50%; background: #35bd83; box-shadow: 0 0 0 4px rgba(53,189,131,.12); }
+    h1 { margin: 25px 0 17px; font-size: clamp(48px, 8vw, 88px); line-height: .99; letter-spacing: -.075em; font-weight: 800; }
+    .gradient-text { background: linear-gradient(100deg, #2381ed 12%, #65c5ff 58%, #477ce8); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero-copy { max-width: 620px; margin: 0 auto; color: #69788d; font-size: clamp(15px, 2vw, 18px); }
+    .hero-actions { margin-top: 30px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .button.secondary { color: #2d6fc7; background: rgba(255,255,255,.78); border: 1px solid rgba(40,120,237,.16); box-shadow: none; }
+    .hero-art { max-width: 900px; margin: 75px auto 0; position: relative; }
+    .orb {
+      position: absolute; width: 340px; height: 340px; border-radius: 50%; left: 50%; top: 45%; transform: translate(-50%,-50%);
+      background: radial-gradient(circle at 35% 28%, #fff 0 4%, #bde8ff 17%, #62baff 40%, #367ee8 68%, #2354ad 100%);
+      box-shadow: inset -22px -28px 50px rgba(17,67,153,.23), 0 35px 90px rgba(51,132,227,.28);
+      filter: saturate(1.04);
+    }
+    .orb:before, .orb:after { content: ""; position: absolute; inset: -28px; border: 1px solid rgba(55,139,225,.18); border-radius: 50%; transform: rotateX(67deg) rotateZ(-22deg); }
+    .orb:after { inset: -55px; transform: rotateX(67deg) rotateZ(25deg); border-color: rgba(55,139,225,.12); }
+    .hero-panel {
+      position: relative; z-index: 2; max-width: 760px; margin: auto; padding: 20px;
+      border: 1px solid rgba(255,255,255,.9); border-radius: 28px;
+      background: rgba(255,255,255,.48); backdrop-filter: blur(18px);
+      box-shadow: 0 30px 90px rgba(33,78,132,.12);
+    }
+    .panel-top { display: flex; justify-content: space-between; align-items: center; color: #718198; font-size: 11px; font-weight: 700; }
+    .dots { display: flex; gap: 5px; } .dots i { width: 6px; height: 6px; border-radius: 50%; background: #c4d2e2; }
+    .balance-card {
+      margin-top: 16px; padding: 25px; text-align: left; border-radius: 20px; color: white;
+      background: linear-gradient(120deg, rgba(21,75,150,.95), rgba(45,145,226,.93)), radial-gradient(circle at 80% 0%, #8edaff, transparent 60%);
+      box-shadow: 0 15px 32px rgba(33,104,180,.20);
+    }
+    .balance-label { font-size: 12px; color: rgba(255,255,255,.74); }
+    .balance-value { font-size: clamp(30px,5vw,43px); font-weight: 800; letter-spacing: -.04em; margin-top: 4px; }
+    .balance-bottom { display: flex; justify-content: space-between; margin-top: 18px; color: rgba(255,255,255,.76); font-size: 11px; }
+    .preview-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 12px; }
+    .mini-stat { padding: 14px; border-radius: 15px; background: rgba(255,255,255,.76); text-align: left; }
+    .mini-stat small { color: #8795a8; font-size: 10px; } .mini-stat strong { display: block; margin-top: 3px; font-size: 17px; }
+    section { padding: 105px 24px; }
+    .container { max-width: 1080px; margin: auto; }
+    .section-kicker { color: #4389d9; font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    .section-title { font-size: clamp(34px,5vw,54px); letter-spacing: -.06em; line-height: 1.12; margin: 12px 0; }
+    .section-desc { color: var(--muted); max-width: 590px; }
+    .center { text-align: center; } .center .section-desc { margin: auto; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 48px; }
+    .feature {
+      min-height: 225px; padding: 27px; border: 1px solid rgba(255,255,255,.9); border-radius: var(--radius);
+      background: rgba(255,255,255,.72); box-shadow: 0 12px 38px rgba(33,75,125,.055);
+      transition: transform .25s, box-shadow .25s;
+    }
+    .feature:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+    .feature-icon { width: 46px; height: 46px; border-radius: 15px; display: grid; place-items: center; color: #2779dd; background: linear-gradient(145deg,#e9f6ff,#dceaff); font-size: 21px; }
+    .feature h3 { margin: 19px 0 6px; font-size: 18px; letter-spacing: -.03em; }
+    .feature p { margin: 0; color: #718096; font-size: 13px; }
+    .showcase {
+      display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 50px;
+      padding: 48px; border-radius: 34px; background: linear-gradient(135deg,#e8f4ff,#f8fbff 65%,#e8f0ff);
+      border: 1px solid white; overflow: hidden;
+    }
+    .showcase-visual {
+      min-height: 300px; border-radius: 25px; padding: 22px; color: white;
+      background: linear-gradient(145deg,#132c50,#2878c8); box-shadow: 0 25px 55px rgba(29,85,150,.2);
+      display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;
+    }
+    .showcase-visual:after { content: ""; position: absolute; width: 250px; height: 250px; right: -75px; top: -85px; border-radius: 50%; background: radial-gradient(circle at 35% 30%,#b6eaff,#4a9de9 60%,#2b61b7); opacity: .9; }
+    .showcase-visual > * { position: relative; z-index: 1; }
+    .code-line { padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,.1); font: 12px ui-monospace, SFMono-Regular, Consolas, monospace; margin-top: 8px; }
+    .showcase-copy h2 { font-size: 35px; line-height: 1.15; letter-spacing: -.06em; margin: 12px 0; }
+    .showcase-copy p { color: #65758b; font-size: 14px; }
+    .cta {
+      text-align: center; padding: 70px 25px; border-radius: 34px; color: white;
+      background: radial-gradient(circle at 80% 10%, rgba(111,202,255,.65), transparent 28%), linear-gradient(115deg,#164d9d,#287de0 58%,#56b6f0);
+      box-shadow: 0 25px 65px rgba(38,112,199,.20);
+    }
+    .cta h2 { font-size: clamp(34px,5vw,55px); letter-spacing: -.06em; margin: 0 0 12px; }
+    .cta p { color: rgba(255,255,255,.8); margin: 0 auto 25px; max-width: 550px; font-size: 14px; }
+    .cta .button { background: white; color: #216bc5; box-shadow: none; }
+    .faq { max-width: 760px; margin: 40px auto 0; }
+    details { padding: 20px 4px; border-bottom: 1px solid var(--line); }
+    summary { cursor: pointer; font-weight: 700; font-size: 15px; list-style: none; display: flex; justify-content: space-between; gap: 15px; }
+    summary:after { content: "+"; color: var(--blue); font-size: 20px; line-height: 1; }
+    details[open] summary:after { content: "−"; }
+    details p { color: #6f7d91; font-size: 13px; margin: 13px 0 0; }
+    footer { padding: 35px 24px 45px; color: #8794a6; font-size: 11px; }
+    .footer-inner { max-width: 1080px; margin: auto; display: flex; justify-content: space-between; gap: 20px; align-items: center; border-top: 1px solid var(--line); padding-top: 25px; }
+    .footer-brand { color: #34445a; font-size: 15px; font-weight: 800; }
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @media (max-width: 760px) {
+      .nav-wrap { padding: 9px 10px; } nav { padding: 9px 12px; }
+      .menu-btn { display: block; }
+      .nav-links { display: none; position: absolute; top: 66px; left: 10px; right: 10px; padding: 18px; border-radius: 18px; background: rgba(250,252,255,.97); box-shadow: var(--shadow); flex-direction: column; align-items: stretch; gap: 16px; }
+      .nav-links.open { display: flex; }
+      .nav-cta { display: none; }
+      .hero { min-height: auto; padding-top: 145px; padding-bottom: 70px; }
+      .hero-art { margin-top: 55px; } .orb { width: 220px; height: 220px; }
+      .hero-panel { padding: 12px; border-radius: 22px; }
+      .balance-card { padding: 18px; } .preview-stats { gap: 6px; }
+      .mini-stat { padding: 10px; } .mini-stat strong { font-size: 14px; }
+      section { padding: 75px 18px; }
+      .feature-grid { grid-template-columns: 1fr; margin-top: 32px; }
+      .feature { min-height: auto; }
+      .showcase { grid-template-columns: 1fr; padding: 22px; gap: 25px; }
+      .showcase-visual { min-height: 250px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *:before, *:after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrap">
+    <nav aria-label="メインナビゲーション">
+      <a class="brand" href="#top"><span class="brand-mark">S</span>Skyblue</a>
+      <button class="menu-btn" id="menuBtn" aria-label="メニューを開く" aria-expanded="false">☰</button>
+      <div class="nav-links" id="navLinks">
+        <a href="#features">Features</a><a href="#economy">Economy</a><a href="#faq">FAQ</a>
+      </div>
+      <a class="nav-cta" href="#invite">Botを導入する ↗</a>
+    </nav>
+  </div>
+
+  <main id="top">
+    <header class="hero">
+      <div class="eyebrow"><span class="pulse"></span> DISCORD ECONOMY BOT</div>
+      <h1>Economy,<br><span class="gradient-text">Reimagined.</span></h1>
+      <p class="hero-copy">あなたのDiscordサーバーに、新しい経済体験を。<br>Skyblueと一緒に、コミュニティの可能性を広げよう。</p>
+      <div class="hero-actions">
+        <a class="button" href="#invite">Skyblueを導入する ↗</a>
+        <a class="button secondary" href="#features">機能を見る ↓</a>
+      </div>
+      <div class="hero-art">
+        <div class="orb"></div>
+        <div class="hero-panel">
+          <div class="panel-top"><span>SKYBLUE · ECONOMY OVERVIEW</span><span class="dots"><i></i><i></i><i></i></span></div>
+          <div class="balance-card">
+            <div class="balance-label">THE SKYBLUE EXPERIENCE</div>
+            <div class="balance-value" style="font-size:clamp(27px,4.5vw,40px)">A Better Community.</div>
+            <div class="balance-bottom"><span>Connect · Enjoy · Grow</span><span>SKYBLUE</span></div>
+          </div>
+          <div class="preview-stats">
+            <div class="mini-stat"><small>COMMUNITY</small><strong>Connect</strong></div>
+            <div class="mini-stat"><small>EXPERIENCE</small><strong>Enjoy</strong></div>
+            <div class="mini-stat"><small>FUTURE</small><strong>Grow</strong></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section id="features">
+      <div class="container center reveal">
+        <div class="section-kicker">Designed for communities</div>
+        <h2 class="section-title">シンプルに使えて、<br><span class="gradient-text">奥深い経済体験。</span></h2>
+        <p class="section-desc">毎日の交流に楽しさをプラス。直感的な操作と、コミュニティに合わせて広げられる経済システムを目指します。</p>
+      </div>
+      <div class="container feature-grid">
+        <article class="feature reveal"><div class="feature-icon">◈</div><h3>Wallet & Bank</h3><p>残高を管理して、サーバー内の経済活動を楽しもう。</p></article>
+        <article class="feature reveal"><div class="feature-icon">↗</div><h3>Daily Rewards</h3><p>毎日の利用を楽しみに変える、報酬システム。</p></article>
+        <article class="feature reveal"><div class="feature-icon">⌘</div><h3>Easy Commands</h3><p>わかりやすいコマンドで、スムーズに操作。</p></article>
+        <article class="feature reveal"><div class="feature-icon">◇</div><h3>Leaderboard</h3><p>ランキングでコミュニティの盛り上がりを可視化。</p></article>
+        <article class="feature reveal"><div class="feature-icon">⇄</div><h3>Transactions</h3><p>ユーザー同士の取引など、経済の広がりをサポート。</p></article>
+        <article class="feature reveal"><div class="feature-icon">✦</div><h3>More to come</h3><p>Skyblueは進化を続けるプロジェクトです。</p></article>
+      </div>
+    </section>
+
+    <section id="economy">
+      <div class="container showcase reveal">
+        <div class="showcase-copy">
+          <div class="section-kicker">Your community economy</div>
+          <h2>数字だけじゃない。<br>コミュニティが動き出す。</h2>
+          <p>残高を確認し、報酬を受け取り、ランキングを楽しむ。SkyblueはDiscordでの毎日に、小さなワクワクを届けます。</p>
+        </div>
+        <div class="showcase-visual">
+          <div>
+            <div style="font-size:11px;letter-spacing:.15em;color:#b7dfff">SKYBLUE PROJECT</div>
+            <div style="font-size:30px;font-weight:800;margin-top:8px">More than a Bot.</div>
+            <p style="max-width:280px;color:rgba(255,255,255,.75);font-size:13px">Discordコミュニティに、新しい楽しさとつながりを。</p>
+          </div>
+          <div style="font-size:12px;letter-spacing:.12em;color:#c5e6ff">CONNECT · CREATE · ENJOY</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="invite">
+      <div class="container reveal">
+        <div class="cta">
+          <div class="section-kicker" style="color:#c7e8ff">START WITH SKYBLUE</div>
+          <h2>Ready to connect?</h2>
+          <p>あなたのDiscordサーバーに、Skyblueの経済体験を。</p>
+          <a class="button" id="inviteButton" href="#" target="_blank" rel="noopener">Discordに追加する ↗</a>
+          <div style="font-size:10px;color:rgba(255,255,255,.65);margin-top:14px">招待リンクは公開前に設定してください。</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="container center reveal">
+        <div class="section-kicker">Questions</div>
+        <h2 class="section-title">Frequently asked questions.</h2>
+      </div>
+      <div class="faq reveal">
+        <details><summary>Skyblueは何のBotですか？</summary><p>Discordサーバーで利用する経済Botです。残高や報酬、ランキングなどの機能を通じて、コミュニティを楽しくします。</p></details>
+        <details><summary>導入するにはどうすればいいですか？</summary><p>ページ上部または下部の「Botを導入する」から、設定済みのDiscord招待リンクへ進めます。</p></details>
+        <details><summary>利用できるコマンドはどこで確認できますか？</summary><p>利用できる機能や最新情報は、Skyblueの公式サポートでご確認ください。</p></details>
+        <details><summary>サポートに問い合わせるには？</summary><p>公式サポートサーバーの招待リンクを、このFAQまたはフッターに追加してください。</p></details>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div><div class="footer-brand">✦ Skyblue</div><div>Economy, Reimagined.</div></div>
+      <div>© <span id="year"></span> Skyblue Project. All rights reserved.</div>
+      <div><a href="#top">Back to top ↑</a></div>
+    </div>
+  </footer>
+
+  <script>
+    // ===== 公開前にここを設定してください =====
+    const SKYBLUE_INVITE_URL = "https://discord.com/oauth2/authorize?client_id=1572104116447092866";
+    // ===========================================
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const inviteButton = document.getElementById("inviteButton");
+    const navInvite = document.querySelector(".nav-cta");
+    [inviteButton, navInvite, ...document.querySelectorAll('a[href="#invite"]')].forEach(link => {
+      if (!link) return;
+      link.addEventListener("click", event => {
+        if (SKYBLUE_INVITE_URL.includes("YOUR_CLIENT_ID")) {
+          event.preventDefault();
+          alert("招待リンクがまだ設定されていません。index.html内の SKYBLUE_INVITE_URL をBotの招待URLに変更してください。");
+        } else {
+          link.href = SKYBLUE_INVITE_URL;
+        }
+      });
+    });
+
+    const menuBtn = document.getElementById("menuBtn");
+    const navLinks = document.getElementById("navLinks");
+    menuBtn.addEventListener("click", () => {
+      const opened = navLinks.classList.toggle("open");
+      menuBtn.setAttribute("aria-expanded", String(opened));
+      menuBtn.textContent = opened ? "×" : "☰";
+    });
+    navLinks.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
+      navLinks.classList.remove("open");
+      menuBtn.setAttribute("aria-expanded", "false");
+      menuBtn.textContent = "☰";
+    }));
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
